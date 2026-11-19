@@ -1,20 +1,15 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using api.Models;
 
 namespace api.Repositories
 {
     public interface IActorRepository
     {
-        List<Actor> GetAll();
-        Actor? GetById(int id);
+        Task <List<Actor>> GetAllAsync();
+        Task <Actor?> GetByIdAsync(int id);
         // returns one movie or null if no movie has that id (why we use the "?")
-        Actor Add(Actor actor);
+        Task <Actor> AddAsync(Actor actor);
 
-        void Update(Actor actor);
+        Task UpdateAsync(Actor actor);
 
-        void Delete(Actor actor);
+        Task DeleteAsync(Actor actor);
     }
 }

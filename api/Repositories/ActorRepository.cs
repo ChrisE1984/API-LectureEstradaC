@@ -14,35 +14,35 @@ namespace api.Repositories
         {
             _db = db;
         }
-        public Actor Add(Actor actor)
+        public async Actor Add(Actor actor)
         {
             _db.Actors.Add(actor);
             //SaveChanges() sends INSERT to the database. after this the movie row is filled in.
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
 
             return actor;
         }
 
-        public void Delete(Actor actor)
+        public async Task Delete(Actor actor)
         {
             _db.Actors.Remove(actor);
-            _db.SaveChanges();
+           await _db.SaveChangesAsync();
         }
 
-        public List<Actor> GetAll()
+        public async Task<List<Actor>> GetAll()
         {
-            return _db.Actors.ToList();
+            return await _db.Actors.ToListAsync();
         }
 
-        public Actor? GetById(int id)
+        public async Task<Actor?> GetById(int id)
         {
-            return _db.Actors.Find(id);
+            return await _db.Actors.FindAsync(id);
         }
 
-        public void Update(Actor actor)
+        public async Task Update(Actor actor)
         {
             _db.Actors.Update(actor);
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
         }
     }
 }

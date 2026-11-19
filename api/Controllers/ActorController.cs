@@ -1,10 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using api.DTOs;
-using api.Services;
-using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers
 {
@@ -20,15 +13,15 @@ namespace api.Controllers
         } 
 
         [HttpGet]
-        public ActionResult<List<ActorResponseDTO>> GetAll()
+        public async ActionResult<List<ActorResponseDTO>> GetAll()
         {
-            return Ok(_services.GetAll());
+            return Ok(await _services.GetAllAsync());
         }
 
         [HttpGet("GetById/{id}")]
-        public ActionResult<ActorResponseDTO> GetByID (int id)
+        public async ActionResult<ActorResponseDTO> GetByID (int id)
         {
-            ActorResponseDTO? actor = _services.GetById(id);
+            ActorResponseDTO? actor = await _services.GetByIdAsync(id);
             if (actor is null)
             {
                 return NotFound();
@@ -37,17 +30,17 @@ namespace api.Controllers
         }
 
         [HttpPost("AddActor")]
-        public ActionResult<ActorResponseDTO> Create (int id, [FromBody] CreateActorDTO dto)
+        public async ActionResult<ActorResponseDTO> Create (int id, [FromBody] CreateActorDTO dto)
         {
-            ActorResponseDTO actor = _services.Create(dto);
+            ActorResponseDTO actor = await _services.CreateAsync(dto);
 
             return CreatedAtAction (nameof (GetByID), new {id = actor.Id}, actor);
         }
 
        [HttpPut("Update/{id}")]
-       public ActionResult<ActorResponseDTO> Update (int id, [FromBody] UpdateActorDTO dto)
+       public async ActionResult<ActorResponseDTO> Update (int id, [FromBody] UpdateActorDTO dto)
         {
-            ActorResponseDTO? actor = _services.Update(id,dto);
+            ActorResponseDTO? actor = await _services.UpdateAsync(id,dto);
 
             if(actor is null)
             {
@@ -59,9 +52,9 @@ namespace api.Controllers
 
         [HttpDelete("Delete/{id}")]
 
-        public IActionResult Delete (int id)
+        public async IActionResult Delete (int id)
         {
-            bool isDeleted = _services.Delete(id);
+            bool isDeleted = await _services.DeleteAsync(id);
 
             if (!isDeleted)
             {

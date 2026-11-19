@@ -1,10 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using api.DTOs;
-using api.Models;
-using api.Repositories;
 
 namespace api.Services
 {
@@ -27,9 +20,9 @@ namespace api.Services
             return ToDto(saved);
         }
 
-        public bool Delete(int id)
+        public async Task<bool> Delete(int id)
         {
-            Actor? actor = _repository.GetById(id);
+            Actor? actor = await _repository.GetByIdAsync(id);
             if(actor is null)
             {
                 return false;
@@ -38,15 +31,15 @@ namespace api.Services
             return true;
         }
 
-        public List<ActorResponseDTO> GetAll()
+        public async Task<List<ActorResponseDTO>> GetAll()
         {
-            List<Actor> actors = _repository.GetAll();
+            List<Actor> actors = await _repository.GetAll();
             return actors.Select(ToDto).ToList();
         }
 
-        public ActorResponseDTO? GetById(int id)
+        public async Task<ActorResponseDTO?> GetById(int id)
         {
-            Actor? actor = _repository.GetById(id);
+            Actor? actor = await _repository.GetByIdAsync(id);
             if(actor is null)
             {
                 return null;
@@ -55,9 +48,9 @@ namespace api.Services
             return ToDto(actor);
         }
 
-        public ActorResponseDTO? Update(int id, UpdateActorDTO dto)
+        public async Task<ActorResponseDTO?> Update(int id, UpdateActorDTO dto)
         {
-            Actor? actor = _repository.GetById(id);
+            Actor? actor = await _repository.GetByIdAsync(id);
             if(actor is null)
             {
                 return null;
