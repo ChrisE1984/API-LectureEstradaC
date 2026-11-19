@@ -1,4 +1,8 @@
 
+using api.DTOs;
+using api.Models;
+using api.Repositories;
+
 namespace api.Services
 {
     public class ActorServices : IActorServices
@@ -8,36 +12,36 @@ namespace api.Services
         {
             _repository = repository;
         }
-        public ActorResponseDTO Create(CreateActorDTO dto)
+        public async Task<ActorResponseDTO> CreateAsync(CreateActorDTO dto)
         {
             Actor actor = new Actor();
             actor.Name = dto.Name;
             actor.BirthYear = dto.BirthYear;
             actor.Country = dto.Country;
 
-            Actor saved = _repository.Add(actor);
+            Actor saved = await _repository.AddAsync(actor);
 
             return ToDto(saved);
         }
 
-        public async Task<bool> Delete(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
             Actor? actor = await _repository.GetByIdAsync(id);
             if(actor is null)
             {
                 return false;
             }
-            _repository.Delete(actor);
+            await _repository.DeleteAsync(actor);
             return true;
         }
 
-        public async Task<List<ActorResponseDTO>> GetAll()
+        public async Task<List<ActorResponseDTO>> GetAllAsync()
         {
-            List<Actor> actors = await _repository.GetAll();
+            List<Actor> actors = await _repository.GetAllAsync();
             return actors.Select(ToDto).ToList();
         }
 
-        public async Task<ActorResponseDTO?> GetById(int id)
+        public async Task<ActorResponseDTO?> GetByIdAsync(int id)
         {
             Actor? actor = await _repository.GetByIdAsync(id);
             if(actor is null)
@@ -48,7 +52,7 @@ namespace api.Services
             return ToDto(actor);
         }
 
-        public async Task<ActorResponseDTO?> Update(int id, UpdateActorDTO dto)
+        public async Task<ActorResponseDTO?> UpdateAsync(int id, UpdateActorDTO dto)
         {
             Actor? actor = await _repository.GetByIdAsync(id);
             if(actor is null)
@@ -61,7 +65,7 @@ namespace api.Services
             actor.BirthYear = dto.BirthYear;
             actor.UpdatedAt = DateTime.UtcNow;
 
-            _repository.Update(actor);
+            await _repository.UpdateAsync(actor);
             return ToDto(actor);
         }
     

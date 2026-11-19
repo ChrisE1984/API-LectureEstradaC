@@ -1,4 +1,8 @@
 
+using api.DTOs;
+using api.Services;
+using Microsoft.AspNetCore.Mvc;
+
 namespace api.Controllers
 {
     [ApiController]
@@ -13,13 +17,13 @@ namespace api.Controllers
         } 
 
         [HttpGet]
-        public async ActionResult<List<ActorResponseDTO>> GetAll()
+        public async Task<ActionResult<List<ActorResponseDTO>>> GetAll()
         {
             return Ok(await _services.GetAllAsync());
         }
 
         [HttpGet("GetById/{id}")]
-        public async ActionResult<ActorResponseDTO> GetByID (int id)
+        public async Task<ActionResult<ActorResponseDTO>> GetByID (int id)
         {
             ActorResponseDTO? actor = await _services.GetByIdAsync(id);
             if (actor is null)
@@ -30,7 +34,7 @@ namespace api.Controllers
         }
 
         [HttpPost("AddActor")]
-        public async ActionResult<ActorResponseDTO> Create (int id, [FromBody] CreateActorDTO dto)
+        public async Task<ActionResult<ActorResponseDTO>> Create ([FromBody] CreateActorDTO dto)
         {
             ActorResponseDTO actor = await _services.CreateAsync(dto);
 
@@ -38,7 +42,7 @@ namespace api.Controllers
         }
 
        [HttpPut("Update/{id}")]
-       public async ActionResult<ActorResponseDTO> Update (int id, [FromBody] UpdateActorDTO dto)
+       public async Task<ActionResult<ActorResponseDTO>> Update (int id, [FromBody] UpdateActorDTO dto)
         {
             ActorResponseDTO? actor = await _services.UpdateAsync(id,dto);
 
@@ -52,7 +56,7 @@ namespace api.Controllers
 
         [HttpDelete("Delete/{id}")]
 
-        public async IActionResult Delete (int id)
+        public async Task<IActionResult> Delete (int id)
         {
             bool isDeleted = await _services.DeleteAsync(id);
 
