@@ -7,11 +7,11 @@ namespace api.Services
 {
     public interface IMovieServices
     {
-        List<MovieResponseDTO> GetAll();
-        MovieResponseDTO? GetByID(int id);
-        MovieResponseDTO Create (CreateMovieDTO dto);
-        MovieResponseDTO? Update (int id, UpdateMovieDTO dto);
-        bool Delete(int id);
+        Task<List<MovieResponseDTO>> GetAllAsync();
+        Task<MovieResponseDTO?> GetByIDAsync(int id);
+        Task<MovieResponseDTO> CreateAsync(CreateMovieDTO dto);
+        Task<MovieResponseDTO?> UpdateAsync(int id, UpdateMovieDTO dto);
+        Task<bool> DeleteAsync(int id);
 
     }
 }

@@ -17,41 +17,41 @@ namespace api.Repositories
             _db = db;
         }
         
-        public List<Movie> GetAll()
+        public async Task<List<Movie>> GetAllAsync()
         {
             // we are going into our DB and returning all movies
-            return _db.Movies.ToList();
+            return await _db.Movies.ToListAsync();
         }
 
-        public Movie? GetById(int id)
+        public async Task<Movie?> GetByIdAsync(int id)
         {
             //Find looks up a row by it's primary id key
-            return _db.Movies.Find(id);
+            return await _db.Movies.FindAsync(id);
         }
 
-        public Movie Add(Movie movie)
+        public async Task <Movie> AddAsync(Movie movie)
         {
             //add only marks the movie as new, doesn't add to the db
             _db.Movies.Add(movie);
             //SaveChanges() sends INSERT to the database. after this the movie row is filled in.
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
 
             return movie;
         }
 
-        public void Update(Movie movie)
+        public async Task UpdateAsync(Movie movie)
         {
             // we mark the movie as changed and save those changes to the DB
             _db.Movies.Update(movie);
 
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
         }
 
-        public void Delete(Movie movie)
+        public async Task DeleteAsync(Movie movie)
         {
             //we mark teh movie for removal and then save the changes
             _db.Movies.Remove(movie);
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
         }
     }
 }

@@ -21,17 +21,19 @@ namespace api.Controllers
             _services = services;
         }
 
+        //async Task<...>: the action awaits the service, so it returns a task
+        //ASP.NET Core awaits the Task for us, then sends the response
         [HttpGet]
-        public ActionResult<List<MovieResponseDTO>> GetAll()
+        public async Task<ActionResult<List<MovieResponseDTO>>> GetAll()
         {
-            return Ok(_services.GetAll());
+            return Ok(await _services.GetAllAsync());
         }
         //get api/movie/getbyid/(id) 
         //return 200 with the movie or 400 if there is no movie
         [HttpGet("GetByID/{id}")]
-        public ActionResult<MovieResponseDTO> GetById(int id)
+        public async Task<ActionResult<MovieResponseDTO>> GetById(int id)
         {
-            MovieResponseDTO? movie = _services.GetByID(id);
+            MovieResponseDTO? movie = await _services.GetByIDAsync(id);
 
             if(movie == null)
             {
@@ -44,17 +46,17 @@ namespace api.Controllers
         //JSON body becomes our CreateMovieDTO
         //we want 201 Created with the new movie
         [HttpPost("AddMovie")]
-        public ActionResult<MovieResponseDTO> AddMovie([FromBody] CreateMovieDTO dto)
+        public async Task<ActionResult<MovieResponseDTO>> AddMovie([FromBody] CreateMovieDTO dto)
         {
-            MovieResponseDTO movie = _services.Create(dto);
+            MovieResponseDTO movie = await _services.CreateAsync(dto);
 
             return CreatedAtAction (nameof (GetById), new {id = movie.Id}, movie);
         }
 
         [HttpPut("Update/{id}")]
-        public ActionResult<MovieResponseDTO> Update(int id, [FromBody] UpdateMovieDTO dto)
+        public async Task<ActionResult<MovieResponseDTO>> Update(int id, [FromBody] UpdateMovieDTO dto)
         {
-            MovieResponseDTO? movie = _services.Update(id,dto);
+            MovieResponseDTO? movie = await _services.UpdateAsync(id,dto);
 
             if(movie is null)
             {
@@ -65,9 +67,9 @@ namespace api.Controllers
         }
 
         [HttpDelete("Delete/{id}")]
-        public IActionResult Delete (int id)
+        public async Task<IActionResult> Delete (int id)
         {
-            bool isDeleted = _services.Delete(id);
+            bool isDeleted = await _services.DeleteAsync(id);
 
             if (!isDeleted)
             {

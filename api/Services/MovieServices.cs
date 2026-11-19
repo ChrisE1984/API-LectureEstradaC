@@ -17,7 +17,7 @@ namespace api.Services
             _repository = repository;
         }
 
-        public MovieResponseDTO Create(CreateMovieDTO dto)
+        public async Task<MovieResponseDTO> CreateAsync(CreateMovieDTO dto)
         {
             Movie movie = new Movie();
             movie.Title = dto.Title;
@@ -25,22 +25,22 @@ namespace api.Services
             movie.Rating = dto.Rating;
             movie.ReleaseYear = dto.ReleaseYear;
 
-            Movie saved = _repository.Add(movie);
+            Movie saved = await _repository.AddAsync(movie);
             //Sending back the same movie with an ID
             return ToDto(saved);
         }
 
-        public List<MovieResponseDTO> GetAll()
+        public async Task<List<MovieResponseDTO>> GetAllAsync()
         {
-            List<Movie> movies = _repository.GetAll();
+            List<Movie> movies = await _repository.GetAllAsync();
 
             //Turning every element in this list into a dto
             return movies.Select(ToDto).ToList();
         }
 
-        public MovieResponseDTO? GetByID(int id)
+        public async Task<MovieResponseDTO?> GetByIDAsync(int id)
         {
-           Movie? movie = _repository.GetById(id);
+           Movie? movie = await _repository.GetByIdAsync(id);
             //if there is no movie, pass null up to the controller.
            if(movie is null)
             {
@@ -50,25 +50,11 @@ namespace api.Services
             return ToDto(movie);
         }
 
-        // We will create a helper function that maps our DTOs
-        // private because it doesn't need to be accessed outside of our class
-        //static because it doesn't have access to instance data
-         private static MovieResponseDTO ToDto(Movie movie)
-        {
-            return new MovieResponseDTO
-            {
-                Id= movie.Id,
-                Title= movie.Title,
-                Director=movie.Director,
-                Rating=movie.Rating,
-                ReleaseYear=movie.ReleaseYear
-            };
-        }
 
-        public MovieResponseDTO? Update(int id, UpdateMovieDTO dto)
+        public async Task<MovieResponseDTO?> UpdateAsync(int id, UpdateMovieDTO dto)
         {
             //we must first load the movie from the database
-            Movie? movie = _repository.GetById(id);
+            Movie? movie = await _repository.GetByIdAsync(id);
 
             if(movie is null)
             {
@@ -82,23 +68,37 @@ namespace api.Services
             // records when this move was last changed
             movie.UpdatedAt= DateTime.UtcNow;
 
-            _repository.Update(movie);
+            await _repository.UpdateAsync(movie);
             return ToDto(movie);
 
         }
 
-        public bool Delete(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
-            Movie? movie = _repository.GetById(id);
+            Movie? movie = await _repository.GetByIdAsync(id);
             if(movie is null)
             {
                 return false;
             }
 
-            _repository.Delete(movie);
+            await _repository.DeleteAsync(movie);
             return true;
 
 
+        }
+        // We will create a helper function that maps our DTOs
+        // private because it doesn't need to be accessed outside of our class
+        //static because it doesn't have access to instance data
+         private static MovieResponseDTO ToDto(Movie movie)
+        {
+            return new MovieResponseDTO
+            {
+                Id= movie.Id,
+                Title= movie.Title,
+                Director=movie.Director,
+                Rating=movie.Rating,
+                ReleaseYear=movie.ReleaseYear
+            };
         }
     }
 }
